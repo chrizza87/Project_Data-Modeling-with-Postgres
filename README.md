@@ -1,4 +1,5 @@
-# Udacity Data Engineer Course // Project 1: Data Modeling with Postgres
+# Udacity Data Engineer Course 
+# Project 1: Data Modeling with Postgres
 
 ## Description
 
@@ -7,8 +8,6 @@
 ## ER Diagramm
 
 ## Jupyter Notebooks
-|## Jupyter Notebooks
-
 | Name                      	| Description                                                    	|
 |---------------------------	|----------------------------------------------------------------	|
 | test.ipynb                   	| displays the first few rows of each table to let you check your database. |
