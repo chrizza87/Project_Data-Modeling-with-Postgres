@@ -114,7 +114,7 @@ def process_data(cur, conn, filepath, func):
 
 def main():
     """
-    Main function that connects to the postgres database and starts processing of song_data and log_data json files.
+    Main function that connects to the postgres database and starts the processing of song_data and log_data json files.
     At the end the database connection is closed.
     """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
