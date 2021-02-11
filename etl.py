@@ -4,40 +4,61 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 
-
 def process_song_file(cur, filepath):
-    # open song file
-    df = 
+    """
+    Reads the content of song json file for given filepath in a dataframe, extracts needed columns from the dataframe
+    and inserts it into the database
 
-    # insert song record
-    song_data = 
-    cur.execute(song_table_insert, song_data)
+    Parameters
+    ----------
+    cur: The psycopg cursor for the connection
+    filepath: The filepath for the song json file
+    """
+
+    # open song file
+    df = pd.read_json(filepath, lines=True)
     
     # insert artist record
-    artist_data = 
+    artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']].values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
+
+    # insert song record
+    song_data = df[['song_id', 'title', 'artist_id', 'year', 'duration']].values[0].tolist()
+    cur.execute(song_table_insert, song_data)
 
 
 def process_log_file(cur, filepath):
+    """
+    Reads the content of log json file for given filepath in a dataframe, filters by nextsong, inserts time data records
+    loads and inserts user records into the database and inserts the songplay data into the database
+
+    Parameters
+    ----------
+    cur: The psycopg cursor for the connection
+    filepath: The filepath for the log json file
+    """
+
     # open log file
-    df = 
+    df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df = 
+    df = df[df.page.eq('NextSong')]
 
     # convert timestamp column to datetime
-    t = 
+    t = pd.to_datetime(df['ts'], unit='ms')
     
     # insert time data records
-    time_data = 
-    column_labels = 
-    time_df = 
+    date_time = pd.Series(t).dt
+    time_data = (df['ts'], date_time.hour, date_time.day, date_time.isocalendar().week, date_time.month, date_time.year, date_time.dayofweek)
+    column_labels = ('start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday')
+    time_df = pd.DataFrame(list(time_data),list(column_labels)).T
+
 
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = 
+    user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -53,14 +74,26 @@ def process_log_file(cur, filepath):
         if results:
             songid, artistid = results
         else:
-            songid, artistid = None, None
+            # continue is used that ne songplay data without song_id or artist_id is inserted to the db
+            continue
 
         # insert songplay record
-        songplay_data = 
+        songplay_data = (row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Gets all json files for given filepath, iterates over all files and calls the given func to process the file
+
+    Parameters
+    ----------
+    cur: The psycopg cursor for the connection
+    conn: The psycopg connection
+    filepath: The filepath for the log json file
+    func: The function to process a given json file
+    """
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -80,6 +113,10 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    Main function that connects to the postgres database and starts processing of song_data and log_data json files.
+    At the end the database connection is closed.
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
