@@ -74,8 +74,7 @@ def process_log_file(cur, filepath):
         if results:
             songid, artistid = results
         else:
-            # continue is used that ne songplay data without song_id or artist_id is inserted to the db
-            continue
+            songid, artistid = None, None
 
         # insert songplay record
         songplay_data = (row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
