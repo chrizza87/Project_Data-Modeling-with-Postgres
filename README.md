@@ -2,7 +2,7 @@
 ## 1 Description
 The data from Sparkify is available in different json files (song_data, log_data). On such files it is hard to run queries and analytics on. The goal is to make use of the data with a database. There queries and analytics could be run. The employees therefore can do more with the data they collected.  
 To reach this goal an ETL process needs to be in place, to process, transform and insert the data from the json files into a database (postgres in this scenario).  
-The database is using the star schema to optimize the queries on the song play analysis and contains the following fact and dimension tables:  
+The database is using the star schema and contains the following fact and dimension tables:  
 Fact tables:
 - songplays
 
