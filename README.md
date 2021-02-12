@@ -1,11 +1,22 @@
 # Udacity Data Engineer Course / Project 1: Data Modeling with Postgres
-
 ## 1 Description
+The data from Sparkify is available in different json files (song_data, log_data). On such files it is hard to run queries and analytics on. The goal is to make use of the data with a database. There queries and analytics could be run. The employees therefore can do more with the data they collected.  
+To reach this goal an ETL process needs to be in place, to process, transform and insert the data from the json files into a database (postgres in this scenario).  
+The database is using the star schema to optimize the queries on the song play analysis and contains the following fact and dimension tables:  
+Fact tables:
+- songplays
 
+Dimension tables:
+- users
+- artist
+- song
+- time
+
+For the ETL process jupyter is used at first and then the learned knowledge is transfered to a python script afterwards.
 
 ## 2 Project Setup
 ### 2.1 Prerequisites
-The following tools/packages/framework have to be installed on your system
+The following tools/packages/frameworks have to be installed on your system
 - docker and docker-compose
 - python3 with psycopg2 and pandas
 - jupyter (to open the jupyter notebooks) and inside psycopg2 and pandas
